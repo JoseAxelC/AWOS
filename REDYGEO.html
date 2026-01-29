@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Práctica de APIs</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      text-align: center;
+    }
+
+    h1, h2 {
+      color: #38bdf8;
+    }
+
+    .card {
+      background: #020617;
+      margin: 20px auto;
+      padding: 25px;
+      border-radius: 16px;
+      width: 95%;
+      max-width: 900px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    select {
+      padding: 10px;
+      font-size: 16px;
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid #38bdf8;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      border-radius: 12px;
+      background: #000;
+    }
+
+    footer {
+      margin: 30px 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Práctica de APIs</h1>
+  <p>Geolocalización y Redes Sociales</p>
+
+  <!-- 🔹 GELOCALIZACIÓN -->
+  <div class="card">
+    <h2>📍 Geolocalización: Cines cercanos a la UTN</h2>
+    <p>Selecciona un cine para ver su ubicación en el mapa</p>
+
+    <select onchange="cambiarMapa(this.value)">
+      <option value="">-- Selecciona un cine --</option>
+      <option value="utn">Universidad Tecnológica de Neza</option>
+      <option value="cinepolis">Cinépolis Nezahualcóyotl</option>
+      <option value="cinemex_neza">Cinemex Nezahualcóyotl</option>
+      <option value="cinemex_aragon">Cinemex Aragón</option>
+    </select>
+
+    <iframe id="mapa"
+      src="https://www.google.com/maps?q=Universidad+Tecnológica+de+Nezahualcóyotl&output=embed"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- 🔹 REDES SOCIALES -->
+  <div class="card">
+    <h2>🌐 Redes Sociales</h2>
+    <p>Selecciona una red social para visualizar su contenido</p>
+
+    <select onchange="cambiarRed(this.value)">
+      <option value="">-- Selecciona una red --</option>
+      <option value="facebook">Facebook</option>
+      <option value="instagram">Instagram</option>
+      <option value="youtube">YouTube</option>
+      <option value="discord">Discord</option>
+    </select>
+
+    <iframe id="red"></iframe>
+  </div>
+
+  <footer>
+    Práctica de APIs · Geolocalización y Redes Sociales
+  </footer>
+
+  <script>
+    function cambiarMapa(lugar) {
+      const mapa = document.getElementById("mapa");
+
+      if (lugar === "utn") {
+        mapa.src = "https://www.google.com/maps?q=Universidad+Tecnológica+de+Nezahualcóyotl&output=embed";
+      } else if (lugar === "cinepolis") {
+        mapa.src = "https://www.google.com/maps?q=Cinépolis+Nezahualcóyotl&output=embed";
+      } else if (lugar === "cinemex_neza") {
+        mapa.src = "https://www.google.com/maps?q=Cinemex+Nezahualcóyotl&output=embed";
+      } else if (lugar === "cinemex_aragon") {
+        mapa.src = "https://www.google.com/maps?q=Cinemex+Aragón&output=embed";
+      }
+    }
+
+    function cambiarRed(red) {
+      const iframe = document.getElementById("red");
+
+      if (red === "facebook") {
+        iframe.src =
+          "https://www.facebook.com/plugins/page.php?href=https://www.facebook.com/facebook&tabs=timeline";
+      } else if (red === "instagram") {
+        iframe.src =
+          "https://www.instagram.com/p/CvK1Zx2L5x5/embed";
+      } else if (red === "youtube") {
+        iframe.src =
+          "https://www.youtube.com/embed?listType=user_uploads&list=Google";
+      } else if (red === "discord") {
+        iframe.src =
+          "https://discord.com/widget?id=81384788765712384&theme=dark";
+      } else {
+        iframe.src = "";
+      }
+    }
+  </script>
+
+</body>
+</html>

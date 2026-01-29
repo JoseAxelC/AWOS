@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Redes Sociales</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      text-align: center;
+    }
+
+    h1 {
+      color: #38bdf8;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 16px;
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid #38bdf8;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    iframe {
+      width: 90%;
+      max-width: 800px;
+      height: 500px;
+      border: none;
+      border-radius: 12px;
+      background: #000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🌐 Redes Sociales</h1>
+  <p>Selecciona una red social para visualizar su contenido</p>
+
+  <select onchange="cambiarRed(this.value)">
+    <option value="">-- Selecciona una red --</option>
+    <option value="facebook">Facebook</option>
+    <option value="instagram">Instagram</option>
+    <option value="youtube">YouTube</option>
+    <option value="discord">Discord</option>
+  </select>
+
+  <br><br>
+
+  <iframe id="red"
+    src=""
+    allowfullscreen>
+  </iframe>
+
+  <script>
+    function cambiarRed(red) {
+      const iframe = document.getElementById("red");
+
+      if (red === "facebook") {
+        iframe.src =
+          "https://www.facebook.com/plugins/page.php?href=https://www.facebook.com/facebook&tabs=timeline&width=500&height=500";
+      }
+      else if (red === "instagram") {
+        iframe.src =
+          "https://www.instagram.com/p/CvK1Zx2L5x5/embed";
+      }
+      else if (red === "youtube") {
+        iframe.src =
+          "https://www.youtube.com/embed?listType=user_uploads&list=Google";
+      }
+      else if (red === "discord") {
+        iframe.src =
+          "https://discord.com/widget?id=81384788765712384&theme=dark";
+      }
+      else {
+        iframe.src = "";
+      }
+    }
+  </script>
+
+</body>
+</html>
