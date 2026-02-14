@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Streaming App</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #141414;
+      color: white;
+    }
+
+    header {
+      background-color: #000;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #e50914;
+      text-align: center;
+    }
+
+    .upload-section {
+      padding: 20px;
+      text-align: center;
+      background-color: #1f1f1f;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #e50914;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #f6121d;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .video-card {
+      background-color: #1f1f1f;
+      padding: 15px;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .video-card:hover {
+      transform: scale(1.03);
+    }
+
+    video {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  Mini Streaming
+</header>
+
+<div class="upload-section">
+  <input type="text" id="title" placeholder="Título del video">
+  <input type="file" id="fileInput" accept="video/*">
+  <button id="uploadBtn">Subir</button>
+</div>
+
+<div class="video-grid" id="videoList"></div>
+
+<script>
+const supabaseClient = window.supabase.createClient(
+  "https://turoafemlbqxwwygcmxd.supabase.co",
+  "sb_publishable_Yj_7hqPGL-J1qzqIGbF9YQ_yEDWTDgS"
+);
+
+// =======================
+// SUBIR VIDEO
+// =======================
+async function uploadVideo() {
+  const file = document.getElementById("fileInput").files[0];
+  const title = document.getElementById("title").value;
+
+  if (!file) {
+    alert("Selecciona un archivo");
+    return;
+  }
+
+  const fileName = Date.now() + "_" + file.name;
+
+  const { error: uploadError } = await supabaseClient.storage
+    .from("videos")
+    .upload(fileName, file);
+
+  if (uploadError) {
+    alert(uploadError.message);
+    return;
+  }
+
+  const { data } = supabaseClient.storage
+    .from("videos")
+    .getPublicUrl(fileName);
+
+  const publicUrl = data.publicUrl;
+
+  const { error: insertError } = await supabaseClient
+    .from("videos")
+    .insert([{ title: title, url: publicUrl }]);
+
+  if (insertError) {
+    alert(insertError.message);
+    return;
+  }
+
+  document.getElementById("fileInput").value = "";
+  document.getElementById("title").value = "";
+
+  loadVideos();
+}
+
+// =======================
+// CARGAR VIDEOS
+// =======================
+async function loadVideos() {
+  const { data, error } = await supabaseClient
+    .from("videos")
+    .select("*")
+    .order("create_at", { ascending: false });
+
+  if (error) return;
+
+  const container = document.getElementById("videoList");
+  container.innerHTML = "";
+
+  if (data) {
+    data.forEach(video => {
+      container.innerHTML += `
+        <div class="video-card">
+          <h3>${video.title}</h3>
+          <video controls>
+            <source src="${video.url}" type="video/mp4">
+          </video>
+        </div>
+      `;
+    });
+  }
+}
+
+document.getElementById("uploadBtn")
+  .addEventListener("click", uploadVideo);
+
+loadVideos();
+</script>
+
+</body>
+</html>
