@@ -1,21 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Mis Proyectos</title>
+<meta charset="UTF-8">
+<title>Dashboard Proyectos</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    display:flex;
+    height:100vh;
+}
+
+/* Panel izquierdo */
+.sidebar{
+    width:220px;
+    background:#1f2937;
+    color:white;
+    padding-top:20px;
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    padding:15px 20px;
+    color:white;
+    text-decoration:none;
+}
+
+.sidebar a:hover{
+    background:#374151;
+}
+
+/* Panel derecho */
+.content{
+    flex:1;
+}
+
+iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+
+</style>
 </head>
+
 <body>
 
-<h1>Mis Proyectos</h1>
+<div class="sidebar">
+<h2>Proyectos</h2>
 
-<ul>
-  <li><a href="Geo.html">Geo</a></li>
-  <li><a href="GeoAct.html">Geo Actividad</a></li>
-  <li><a href="REDYGEO.html">Red y Geo</a></li>
-  <li><a href="RedS.html">Redes</a></li>
-  <li><a href="RedSAct.html">Redes Actividad</a></li>
-  <li><a href="stream.html">Streaming</a></li>
-</ul>
+<a href="Geo.html" target="visor">Geo</a>
+<a href="GeoAct.html" target="visor">Geo Actividad</a>
+<a href="REDYGEO.html" target="visor">Red y Geo</a>
+<a href="RedS.html" target="visor">Redes</a>
+<a href="RedSAct.html" target="visor">Redes Actividad</a>
+<a href="stream.html" target="visor">Streaming</a>
+
+</div>
+
+<div class="content">
+<iframe name="visor"></iframe>
+</div>
 
 </body>
-</html>
+
 
