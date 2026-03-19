@@ -51,7 +51,7 @@ pmremGenerator.compileEquirectangularShader();
 const loader = new RGBELoader();
 
 loader.load(
-  "miHDR.hdr",   // 👈 IMPORTANTE: ruta correcta
+  "./miHDR.hdr",   // 👈 IMPORTANTE: ruta correcta
   function(texture) {
 
     texture.mapping = THREE.EquirectangularReflectionMapping;
