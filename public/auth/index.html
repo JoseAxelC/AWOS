@@ -2,67 +2,63 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>2FA - Verificación</title>
+<title>2FA Google</title>
 
 <style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
 }
 
-.card{
-    background:white;
-    padding:30px;
-    border-radius:12px;
-    width:320px;
-    text-align:center;
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-h1{
-    color:#1e3c72;
+h1, h2 {
+  margin-bottom: 20px;
+  color: #1e3c72;
 }
 
-button{
-    background:#2a5298;
-    color:white;
-    border:none;
-    padding:10px 20px;
-    border-radius:8px;
-    cursor:pointer;
-    margin-top:10px;
+button {
+  background: #2a5298;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-button:hover{
-    background:#1e3c72;
+button:hover {
+  background: #1e3c72;
 }
 
-input{
-    width:90%;
-    padding:10px;
-    margin-top:10px;
-    border-radius:8px;
-    border:1px solid #ccc;
-    text-align:center;
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  text-align: center;
 }
 
-img{
-    margin-top:15px;
+.success {
+  color: green;
+  font-weight: bold;
 }
 
-.success{
-    color:green;
-    font-weight:bold;
-}
-
-.error{
-    color:red;
-    font-weight:bold;
+.error {
+  color: red;
+  font-weight: bold;
 }
 </style>
 </head>
@@ -71,18 +67,18 @@ img{
 
 <div class="card">
 
-<h1>🔐 2FA</h1>
+<h1>🔐 Verificación en 2 Pasos</h1>
 
 <div id="inicio">
-    <button onclick="generarQR()">Activar 2FA</button>
+  <button onclick="generarQR()">Activar 2FA</button>
 </div>
 
 <div id="qrBox" style="display:none;">
-    <h3>Escanea el QR</h3>
-    <img id="qr" width="200">
+  <h2>Escanea el código QR</h2>
+  <img id="qr" width="200">
 
-    <input type="text" id="token" placeholder="Código de 6 dígitos">
-    <button onclick="verificar()">Verificar</button>
+  <input id="token" placeholder="Código de 6 dígitos">
+  <button onclick="verificar()">Verificar</button>
 </div>
 
 <p id="mensaje"></p>
@@ -92,37 +88,37 @@ img{
 <script>
 
 async function generarQR(){
-    const res = await fetch("/auth/generar");
-    const data = await res.json();
+  const res = await fetch("/auth/generar");
+  const data = await res.json();
 
-    document.getElementById("inicio").style.display = "none";
-    document.getElementById("qrBox").style.display = "block";
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("qrBox").style.display = "block";
 
-    document.getElementById("qr").src = data.qr;
+  document.getElementById("qr").src = data.qr;
 }
 
 async function verificar(){
-    const token = document.getElementById("token").value;
+  const token = document.getElementById("token").value;
 
-    const res = await fetch("/auth/verificar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ token })
-    });
+  const res = await fetch("/auth/verificar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ token })
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    const msg = document.getElementById("mensaje");
+  const msg = document.getElementById("mensaje");
 
-    if(data.success){
-        msg.textContent = "✅ Código correcto";
-        msg.className = "success";
-    }else{
-        msg.textContent = "❌ Código incorrecto";
-        msg.className = "error";
-    }
+  if(data.success){
+    msg.textContent = "✅ Código correcto";
+    msg.className = "success";
+  }else{
+    msg.textContent = "❌ Código incorrecto";
+    msg.className = "error";
+  }
 }
 
 </script>
