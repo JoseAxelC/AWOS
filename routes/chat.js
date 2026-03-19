@@ -1,8 +1,9 @@
 const express = require("express");
-const router = express.Router();
 const axios = require("axios");
 
-const HF_TOKEN = "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";
+const router = express.Router();
+
+const HF_TOKEN = process.env.HF_TOKEN;
 
 router.post("/", async (req, res) => {
 
@@ -13,13 +14,11 @@ router.post("/", async (req, res) => {
     }
 
     try {
+
         const response = await axios.post(
-            "https://router.huggingface.co/v1/chat/completions",
+            "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
             {
-                model: "mistralai/Mistral-7B-Instruct-v0.2",
-                messages: [
-                    { role: "user", content: mensaje }
-                ]
+                inputs: mensaje
             },
             {
                 headers: {
@@ -28,9 +27,12 @@ router.post("/", async (req, res) => {
             }
         );
 
-        res.json({ respuesta: response.data.choices[0].message.content });
+        const respuestaIA = response.data[0]?.generated_text || "No hubo respuesta";
+
+        res.json({ respuesta: respuestaIA });
 
     } catch (error) {
+        console.error("ERROR IA:", error.response?.data || error.message);
         res.json({ respuesta: "Error IA" });
     }
 });
