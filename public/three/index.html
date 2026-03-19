@@ -48,7 +48,7 @@ pmremGenerator.compileEquirectangularShader();
 
 // Cargar EXR
 const loader = new EXRLoader();
-loader.load("/miHDR.exr", function(texture) {
+loader.load("/miHDR.hdr", function(texture) {
 
     texture.mapping = THREE.EquirectangularReflectionMapping;
 
