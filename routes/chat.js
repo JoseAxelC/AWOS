@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 
-const HF_TOKEN = "TU_TOKEN";
+const HF_TOKEN = "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";
 
 router.post("/", async (req, res) => {
 
