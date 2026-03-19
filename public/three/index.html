@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>HDR Viewer 360 Pro</title>
+
+<style>
+body { margin: 0; overflow: hidden; cursor: grab; }
+body:active { cursor: grabbing; }
+</style>
+
+<!-- Import Map (LOCAL, sin internet) -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "/three/build/three.module.js"
+  }
+}
+</script>
+
+</head>
+<body>
+
+<script type="module">
+
+import * as THREE from "three";
+import { EXRLoader } from "/three/examples/jsm/loaders/EXRLoader.js";
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.set(0, 0, 1);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+// PMREM
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+pmremGenerator.compileEquirectangularShader();
+
+// Cargar EXR
+const loader = new EXRLoader();
+loader.load("/miHDR.exr", function(texture) {
+
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+
+    const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+
+    scene.environment = envMap;
+    scene.background = texture;
+
+    texture.dispose();
+    pmremGenerator.dispose();
+});
+
+
+// 🔥 Control 360 con click
+let isDragging = false;
+let prevX = 0;
+let prevY = 0;
+
+let rotationY = 0;
+let rotationX = 0;
+
+window.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    prevX = e.clientX;
+    prevY = e.clientY;
+});
+
+window.addEventListener("mouseup", () => {
+    isDragging = false;
+});
+
+window.addEventListener("mouseleave", () => {
+    isDragging = false;
+});
+
+window.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+
+    const deltaX = e.clientX - prevX;
+    const deltaY = e.clientY - prevY;
+
+    prevX = e.clientX;
+    prevY = e.clientY;
+
+    rotationY += deltaX * 0.005;
+    rotationX += deltaY * 0.005;
+
+    // Limitar rotación vertical para evitar volteo extraño
+    rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationX));
+});
+
+
+// Animación
+function animate() {
+    requestAnimationFrame(animate);
+
+    scene.environmentRotation.set(rotationX, rotationY, 0);
+    scene.backgroundRotation.set(rotationX, rotationY, 0);
+
+    renderer.render(scene, camera);
+}
+
+animate();
+
+// Resize
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+</script>
+
+</body>
+</html>
