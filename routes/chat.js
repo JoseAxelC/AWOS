@@ -19,10 +19,12 @@ router.post("/", async (req, res) => {
 
         res.json({ respuesta });
 
-    } catch (error) {
-        console.error("ERROR REAL:", error.response?.data || error.message);
-        res.json({ respuesta: "Error IA" });
-    }
+   catch (error) {
+    console.error("🔥 ERROR IA COMPLETO:");
+    console.error(error.response?.data || error.message);
+
+    res.json({ respuesta: "Error IA" });
+}
 });
 
 module.exports = router;
