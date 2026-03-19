@@ -9,7 +9,7 @@ body { margin: 0; overflow: hidden; cursor: grab; }
 body:active { cursor: grabbing; }
 </style>
 
-<!-- Import Map (LOCAL, sin internet) -->
+<!-- Import Map -->
 <script type="importmap">
 {
   "imports": {
@@ -24,7 +24,7 @@ body:active { cursor: grabbing; }
 <script type="module">
 
 import * as THREE from "three";
-import { EXRLoader } from "/three/examples/jsm/loaders/EXRLoader.js";
+import { RGBELoader } from "/three/examples/jsm/loaders/RGBELoader.js";
 
 const scene = new THREE.Scene();
 
@@ -39,6 +39,7 @@ camera.position.set(0, 0, 1);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.body.appendChild(renderer.domElement);
 
@@ -46,9 +47,12 @@ document.body.appendChild(renderer.domElement);
 const pmremGenerator = new THREE.PMREMGenerator(renderer);
 pmremGenerator.compileEquirectangularShader();
 
-// Cargar EXR
-const loader = new EXRLoader();
-loader.load("/miHDR.hdr", function(texture) {
+// ✅ Cargar HDR correctamente
+const loader = new RGBELoader();
+
+loader.load(
+  "/three/miHDR.hdr",   // 👈 IMPORTANTE: ruta correcta
+  function(texture) {
 
     texture.mapping = THREE.EquirectangularReflectionMapping;
 
@@ -59,10 +63,15 @@ loader.load("/miHDR.hdr", function(texture) {
 
     texture.dispose();
     pmremGenerator.dispose();
-});
+  },
+  undefined,
+  function(error){
+    console.error("Error cargando HDR:", error);
+  }
+);
 
 
-// 🔥 Control 360 con click
+// 🎮 Control 360 con mouse
 let isDragging = false;
 let prevX = 0;
 let prevY = 0;
@@ -96,7 +105,6 @@ window.addEventListener("mousemove", (e) => {
     rotationY += deltaX * 0.005;
     rotationX += deltaY * 0.005;
 
-    // Limitar rotación vertical para evitar volteo extraño
     rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationX));
 });
 
