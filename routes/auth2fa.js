@@ -4,7 +4,7 @@ const router = express.Router();
 // tus rutas aquí
 
 router.get("/", (req, res) => {
-    res.send("2FA funcionando");
+    res.send("2FA funcionando al 100");
 });
 
 module.exports = router;
