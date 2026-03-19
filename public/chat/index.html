@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat IA Java</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #1e1e2f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 400px;
+            height: 600px;
+            background: #2a2a40;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .chat-header {
+            background: #4CAF50;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+
+        .user {
+            background: #4CAF50;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot {
+            background: #3a3a55;
+            color: white;
+            align-self: flex-start;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            background: #1e1e2f;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+        }
+
+        .chat-input button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .chat-input button:hover {
+            background: #45a049;
+        }
+
+        .typing {
+            font-style: italic;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        🤖 Chat IA - Experto en Java
+    </div>
+
+    <div class="chat-box" id="chatBox"></div>
+
+    <div class="chat-input">
+        <input type="text" id="mensaje" placeholder="Pregunta sobre Java...">
+        <button onclick="enviar()">Enviar</button>
+    </div>
+</div>
+
+<script>
+async function enviar() {
+
+    const input = document.getElementById("mensaje");
+    const mensaje = input.value.trim();
+    if (!mensaje) return;
+
+    const chatBox = document.getElementById("chatBox");
+
+    // Mostrar mensaje usuario
+    const userMsg = document.createElement("div");
+    userMsg.classList.add("message", "user");
+    userMsg.innerText = mensaje;
+    chatBox.appendChild(userMsg);
+
+    input.value = "";
+
+    // Indicador escribiendo
+    const typingMsg = document.createElement("div");
+    typingMsg.classList.add("message", "bot", "typing");
+    typingMsg.innerText = "Escribiendo...";
+    chatBox.appendChild(typingMsg);
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ texto: mensaje })
+        });
+
+        const data = await response.json();
+
+        typingMsg.remove();
+
+        const botMsg = document.createElement("div");
+        botMsg.classList.add("message", "bot");
+        botMsg.innerText = data.respuesta;
+        chatBox.appendChild(botMsg);
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+    } catch (error) {
+        typingMsg.remove();
+
+        const errorMsg = document.createElement("div");
+        errorMsg.classList.add("message", "bot");
+        errorMsg.innerText = "Error al conectar con el servidor.";
+        chatBox.appendChild(errorMsg);
+    }
+}
+
+// Enter para enviar
+document.getElementById("mensaje").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        enviar();
+    }
+});
+</script>
+
+</body>
+</html>
