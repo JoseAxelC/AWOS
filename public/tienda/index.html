@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mi Tienda Escolar</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    background: linear-gradient(135deg,#1e3c72,#2a5298);
+    color:#333;
+}
+
+header{
+    text-align:center;
+    padding:20px;
+    color:white;
+}
+
+.contenedor{
+    display:flex;
+    justify-content:space-around;
+    flex-wrap:wrap;
+    margin:20px;
+}
+
+.producto{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    width:220px;
+    margin:15px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+.producto button{
+    background:#2ecc71;
+    color:white;
+    border:none;
+    padding:10px;
+    border-radius:6px;
+    cursor:pointer;
+    width:100%;
+}
+
+.producto button:hover{
+    background:#27ae60;
+}
+
+.carrito, .formulario{
+    background:white;
+    margin:20px auto;
+    padding:20px;
+    width:400px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+.formulario button{
+    background:#e67e22;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:6px;
+    cursor:pointer;
+    width:100%;
+}
+
+.formulario button:hover{
+    background:#d35400;
+}
+
+ul{
+    padding-left:20px;
+}
+
+/* Pantalla confirmación */
+#confirmacion{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.confirm-box{
+    background:white;
+    width:400px;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+}
+
+.confirm-box button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:6px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+.confirmar{
+    background:#27ae60;
+    color:white;
+}
+
+.cancelar{
+    background:#e74c3c;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛒 Mi Tienda Escolar</h1>
+</header>
+
+<div class="contenedor">
+    <div class="producto">
+        <h3>Teclado Gamer</h3>
+        <p>$500</p>
+        <button onclick="agregar('Teclado Gamer',500)">Agregar</button>
+    </div>
+
+    <div class="producto">
+        <h3>Mouse RGB</h3>
+        <p>$250</p>
+        <button onclick="agregar('Mouse RGB',250)">Agregar</button>
+    </div>
+
+    <div class="producto">
+        <h3>Audífonos</h3>
+        <p>$700</p>
+        <button onclick="agregar('Audífonos',700)">Agregar</button>
+    </div>
+</div>
+
+<div class="carrito">
+    <h2>🧾 Carrito</h2>
+    <ul id="lista"></ul>
+    <h3>Total: $<span id="total">0</span></h3>
+</div>
+
+<div class="formulario">
+    <h2>Datos del Cliente</h2>
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="email" id="email" placeholder="Correo">
+    <button onclick="mostrarConfirmacion()">Comprar</button>
+</div>
+
+<!-- Pantalla Confirmación -->
+<div id="confirmacion">
+    <div class="confirm-box">
+        <h2>💳 Confirmar Pago</h2>
+        <div id="resumenConfirmacion"></div>
+        <h3>Total: $<span id="totalConfirmacion"></span></h3>
+
+        <button class="confirmar" onclick="confirmarPago()">Confirmar</button>
+        <button class="cancelar" onclick="cancelarPago()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+let carrito = [];
+
+function agregar(nombre, precio){
+    carrito.push({nombre,precio});
+    actualizar();
+}
+
+function actualizar(){
+    const lista = document.getElementById("lista");
+    const totalSpan = document.getElementById("total");
+    lista.innerHTML = "";
+    let total = 0;
+
+    carrito.forEach(p=>{
+        const li = document.createElement("li");
+        li.textContent = `${p.nombre} - $${p.precio}`;
+        lista.appendChild(li);
+        total += p.precio;
+    });
+
+    totalSpan.textContent = total;
+}
+
+function mostrarConfirmacion(){
+    const nombre = document.getElementById("nombre").value;
+    const email = document.getElementById("email").value;
+
+    if(!nombre || !email || carrito.length === 0){
+        alert("Completa los datos y agrega productos");
+        return;
+    }
+
+    let resumenHTML = "";
+    let total = 0;
+
+    carrito.forEach(p=>{
+        resumenHTML += `<p>${p.nombre} - $${p.precio}</p>`;
+        total += p.precio;
+    });
+
+    document.getElementById("resumenConfirmacion").innerHTML = resumenHTML;
+    document.getElementById("totalConfirmacion").textContent = total;
+    document.getElementById("confirmacion").style.display = "flex";
+}
+
+function cancelarPago(){
+    document.getElementById("confirmacion").style.display = "none";
+}
+
+async function confirmarPago(){
+
+    const nombre = document.getElementById("nombre").value;
+    const email = document.getElementById("email").value;
+
+    try{
+        const res = await fetch("http://localhost:3000/comprar",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({nombre,email,carrito})
+        });
+
+        const data = await res.json();
+        alert(data.mensaje);
+        location.reload();
+
+    }catch(error){
+        alert("Error al procesar el pago");
+        console.error(error);
+    }
+}
+</script>
+
+</body>
+</html>
