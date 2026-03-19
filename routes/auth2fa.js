@@ -1,18 +1,12 @@
 const express = require("express");
+const router = express.Router();
 const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
 let userSecret = null;
 
-// 🔐 Generar QR
-app.get("/auth/generar", async (req, res) => {
+// Generar QR
+router.get("/generar", async (req, res) => {
 
   const secret = speakeasy.generateSecret({
     length: 20,
@@ -23,11 +17,11 @@ app.get("/auth/generar", async (req, res) => {
 
   const qr = await QRCode.toDataURL(secret.otpauth_url);
 
-  res.json({ qr }); // 👈 ahora responde JSON
+  res.json({ qr });
 });
 
-// 🔐 Verificar código
-app.post("/auth/verificar", (req, res) => {
+// Verificar código
+router.post("/verificar", (req, res) => {
 
   const { token } = req.body;
 
@@ -41,6 +35,4 @@ app.post("/auth/verificar", (req, res) => {
   res.json({ success: verified });
 });
 
-app.listen(PORT, () => {
-  console.log("Servidor corriendo");
-});
+module.exports = router; // 👈 ESTO ES LO MÁS IMPORTANTE
