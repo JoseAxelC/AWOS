@@ -42,7 +42,7 @@ router.post("/comprar", async (req, res) => {
             mensaje: "Compra exitosa ✅"
         });
 
-        catch (error) {
+        }catch (error) {
     
         console.error("🔥 ERROR REAL:");
         console.error(error);
