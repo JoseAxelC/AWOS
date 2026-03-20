@@ -5,10 +5,14 @@ const router = express.Router();
 
 router.post("/comprar", async (req, res) => {
 
+    console.log("📦 BODY:", req.body);
+
     const { nombre, email, carrito } = req.body;
 
     if (!nombre || !email || !carrito) {
-        return res.status(400).json({ mensaje: "Faltan datos" });
+        return res.status(400).json({
+            mensaje: "Faltan datos"
+        });
     }
 
     try {
@@ -21,33 +25,33 @@ router.post("/comprar", async (req, res) => {
             }
         });
 
+        // 🔥 prueba conexión
         await transporter.verify();
-        console.log("✅ Conectado a Gmail");
+        console.log("✅ Gmail OK");
 
         const total = carrito.reduce((acc, p) => acc + p.precio, 0);
 
         await transporter.sendMail({
-            from: `"Mi Tienda" <${process.env.EMAIL_USER}>`,
+            from: process.env.EMAIL_USER,
             to: email,
             subject: "Compra realizada",
-            html: `
-                <h2>🛒 Compra exitosa</h2>
-                <p>Cliente: ${nombre}</p>
-                <p>Total: $${total}</p>
-            `
+            html: `<h2>Compra exitosa</h2><p>Total: $${total}</p>`
         });
 
-        res.json({ mensaje: "✅ Compra realizada y correo enviado" });
+        res.json({
+            mensaje: "Compra exitosa ✅"
+        });
 
     } catch (error) {
-        console.error("🔥 ERROR CORREO:");
+
+        console.error("🔥 ERROR REAL:");
         console.error(error);
 
         res.status(500).json({
-            mensaje: "❌ Error al procesar el pago"
+            mensaje: "Error en servidor",
+            error: error.message // 👈 CLAVE
         });
     }
-
 });
 
 module.exports = router;
