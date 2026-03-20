@@ -16,29 +16,29 @@ router.post("/", async (req, res) => {
     try {
 
         const response = await axios.post(
-            "https://router.huggingface.co/v1/chat/completions",
+    "https://router.huggingface.co/v1/chat/completions",
+    {
+        model: "meta-llama/Llama-3-8b-instruct", // 👈 CAMBIADO
+        messages: [
             {
-                model: "mistralai/Mistral-7B-Instruct-v0.2",
-                messages: [
-                    {
-                        role: "system",
-                        content: "Eres un experto en programación en Java."
-                    },
-                    {
-                        role: "user",
-                        content: mensaje
-                    }
-                ],
-                max_tokens: 200,
-                temperature: 0.3
+                role: "system",
+                content: "Eres un experto en programación en Java."
             },
             {
-                headers: {
-                    Authorization: `Bearer ${HF_TOKEN}`,
-                    "Content-Type": "application/json"
-                }
+                role: "user",
+                content: mensaje
             }
-        );
+        ],
+        max_tokens: 200,
+        temperature: 0.3
+    },
+    {
+        headers: {
+            Authorization: `Bearer ${process.env.HF_TOKEN}`,
+            "Content-Type": "application/json"
+        }
+    }
+);
 
         const respuestaIA = response.data.choices[0].message.content;
 
