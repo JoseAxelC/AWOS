@@ -1,60 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Proyectos</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    display:flex;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:240px;
+    background:#1f2937;
+    color:white;
+    padding-top:20px;
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+/* LINKS */
+.menu-item{
+    position:relative;
+}
+
+.menu-item a{
+    display:block;
+    padding:15px 20px;
+    color:white;
+    text-decoration:none;
+}
+
+.menu-item a:hover{
+    background:#374151;
+}
+
+/* SUBMENU */
+.submenu{
+    display:none;
+    position:absolute;
+    left:240px;
+    top:0;
+    background:#111827;
+    min-width:150px;
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+
+.submenu a{
+    display:block;
+    padding:10px;
+    color:white;
+    text-decoration:none;
+}
+
+.submenu a:hover{
+    background:#374151;
+}
+
+/* SHOW MENU */
+.menu-item:hover .submenu{
+    display:block;
+}
+
+/* CONTENT */
+.content{
+    flex:1;
+    background:#f4f6f9;
+}
+
+iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+</style>
+</head>
+
+<body>
+
 <div class="sidebar">
-<h2>Proyectos</h2>
+<h2>🚀 Proyectos</h2>
 
 <div class="menu-item">
-  <a>Geo</a>
-  <div class="submenu">
-    <a href="/geo" target="visor">📄 PDF</a>
-    <a href="/geo/video" target="visor">📹 Video</a>
-  </div>
-</div>
-
-<div class="menu-item">
-  <a>Redes</a>
-  <div class="submenu">
-    <a href="/red" target="visor">📄 PDF</a>
-    <a href="/red/video" target="visor">📹 Video</a>
-  </div>
+    <a href="/Geo" target="visor">Geo Actividad</a>
+    <div class="submenu">
+        <a href="#">📄 PDF</a>
+        <a href="#">🎥 Video</a>
+    </div>
 </div>
 
 <div class="menu-item">
-  <a>Streaming</a>
-  <div class="submenu">
-    <a href="/streaming" target="visor">📄 PDF</a>
-    <a href="/streaming/video" target="visor">📹 Video</a>
-  </div>
+    <a href="/Red" target="visor">Redes Actividad</a>
+    <div class="submenu">
+        <a href="#">📄 PDF</a>
+        <a href="#">🎥 Video</a>
+    </div>
 </div>
 
 <div class="menu-item">
-  <a>IA Java</a>
-  <div class="submenu">
-    <a href="/chat" target="visor">📄 Proyecto</a>
-    <a href="/chat/video" target="visor">📹 Video</a>
-  </div>
+    <a href="/streaming" target="visor">Streaming</a>
+    <div class="submenu">
+        <a href="#">📄 PDF</a>
+        <a href="#">🎥 Video</a>
+    </div>
 </div>
 
 <div class="menu-item">
-  <a>Tienda</a>
-  <div class="submenu">
-    <a href="/tienda" target="visor">📄 Proyecto</a>
-    <a href="/tienda/video" target="visor">📹 Video</a>
-  </div>
+    <a href="/chat" target="visor">IA Java</a>
+    <div class="submenu">
+        <a href="#">📄 PDF</a>
+        <a href="#">🎥 Video</a>
+    </div>
 </div>
 
 <div class="menu-item">
-  <a>ThreeJS</a>
-  <div class="submenu">
-    <a href="/three" target="visor">📄 Proyecto</a>
-    <a href="/three/video" target="visor">📹 Video</a>
-  </div>
+    <a href="/tienda" target="visor">Tienda</a>
+    <div class="submenu">
+        <a href="#">📄 PDF</a>
+        <a href="#">🎥 Video</a>
+    </div>
 </div>
 
 <div class="menu-item">
-  <a>2FA</a>
-  <div class="submenu">
-    <a href="/auth" target="visor">📄 Proyecto</a>
-    <a href="/auth/video" target="visor">📹 Video</a>
-  </div>
+    <a href="/three" target="visor">ThreeJS</a>
+    <div class="submenu">
+        <a href="#">📄 PDF</a>
+        <a href="#">🎥 Video</a>
+    </div>
+</div>
+
+<div class="menu-item">
+    <a href="/auth" target="visor">2FA</a>
+    <div class="submenu">
+        <a href="#">📄 PDF</a>
+        <a href="#">🎥 Video</a>
+    </div>
 </div>
 
 </div>
+
+<div class="content">
+    <iframe name="visor"></iframe>
+</div>
+
+</body>
+</html>
