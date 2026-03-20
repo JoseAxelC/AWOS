@@ -42,14 +42,14 @@ router.post("/comprar", async (req, res) => {
             mensaje: "Compra exitosa ✅"
         });
 
-    } catch (error) {
-
+        catch (error) {
+    
         console.error("🔥 ERROR REAL:");
         console.error(error);
-
+    
         res.status(500).json({
-            mensaje: "Error en servidor",
-            error: error.message // 👈 CLAVE
+            mensaje: "Error al procesar el pago",
+            error: error.message
         });
     }
 });
