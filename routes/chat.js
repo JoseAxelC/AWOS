@@ -16,9 +16,9 @@ router.post("/", async (req, res) => {
     try {
 
         const response = await axios.post(
-            "https://openrouter.ai/api/v1/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             {
-                model: "microsoft/phi-3-mini-128k-instruct:free", // 👈 GRATIS
+                model: "llama3-8b-8192", // 🔥 GRATIS Y RÁPIDO
                 messages: [
                     {
                         role: "system",
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
             },
             {
                 headers: {
-                    Authorization: `Bearer ${process.env.OPENROUTER_KEY}`,
+                    Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
                     "Content-Type": "application/json"
                 }
             }
