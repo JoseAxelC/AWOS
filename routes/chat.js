@@ -3,12 +3,10 @@ const axios = require("axios");
 
 const router = express.Router();
 
-// Ruta principal del chat
 router.post("/", async (req, res) => {
 
     const mensaje = req.body.texto;
 
-    // 🔒 Filtro: solo Java
     if (!mensaje.toLowerCase().includes("java")) {
         return res.json({
             respuesta: "Solo puedo hablar sobre programación en Java."
@@ -20,19 +18,17 @@ router.post("/", async (req, res) => {
         const response = await axios.post(
             "https://openrouter.ai/api/v1/chat/completions",
             {
-                model: "meta-llama/llama-3-8b-instruct", // 👈 estable
+                model: "microsoft/phi-3-mini-128k-instruct:free", // 👈 GRATIS
                 messages: [
                     {
                         role: "system",
-                        content: "Eres un experto en programación en Java. Responde claro y sencillo."
+                        content: "Eres un experto en programación en Java."
                     },
                     {
                         role: "user",
                         content: mensaje
                     }
-                ],
-                max_tokens: 200,
-                temperature: 0.5
+                ]
             },
             {
                 headers: {
@@ -47,9 +43,7 @@ router.post("/", async (req, res) => {
         res.json({ respuesta: respuestaIA });
 
     } catch (error) {
-        console.error("🔥 ERROR IA COMPLETO:");
-        console.error(error.response?.data || error.message);
-
+        console.error("🔥 ERROR IA:", error.response?.data || error.message);
         res.json({ respuesta: "Error IA" });
     }
 });
