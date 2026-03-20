@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
         const response = await axios.post(
             "https://api.groq.com/openai/v1/chat/completions",
             {
-                model: "llama3-8b-8192", // 🔥 GRATIS Y RÁPIDO
+                model: "llama3-70b-8192", // 👈 CAMBIO CLAVE
                 messages: [
                     {
                         role: "system",
