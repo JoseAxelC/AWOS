@@ -3,22 +3,24 @@ const axios = require("axios");
 
 const router = express.Router();
 
+const API_KEY = process.env.OPENROUTER_KEY;
+
 router.post("/", async (req, res) => {
 
     const mensaje = req.body.texto;
 
     try {
         const response = await axios.post(
-            "https://router.huggingface.co/v1/chat/completions",
+            "https://openrouter.ai/api/v1/chat/completions",
             {
-                model: "google/gemma-2b-it", // 👈 ESTE SÍ FUNCIONA
+                model: "openchat/openchat-3.5",
                 messages: [
                     { role: "user", content: mensaje }
                 ]
             },
             {
                 headers: {
-                    Authorization: `Bearer ${process.env.HF_TOKEN}`,
+                    Authorization: `Bearer ${API_KEY}`,
                     "Content-Type": "application/json"
                 }
             }
