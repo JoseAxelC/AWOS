@@ -3,51 +3,33 @@ const axios = require("axios");
 
 const router = express.Router();
 
-const HF_TOKEN = process.env.HF_TOKEN;
-
 router.post("/", async (req, res) => {
 
     const mensaje = req.body.texto;
 
-    if (!mensaje.toLowerCase().includes("java")) {
-        return res.json({ respuesta: "Solo puedo hablar sobre programación en Java." });
-    }
-
     try {
-
         const response = await axios.post(
-    "https://router.huggingface.co/v1/chat/completions",
-    {
-        model: "meta-llama/Llama-3-8b-instruct", // 👈 CAMBIADO
-        messages: [
+            "https://router.huggingface.co/v1/chat/completions",
             {
-                role: "system",
-                content: "Eres un experto en programación en Java."
+                model: "google/gemma-2b-it", // 👈 ESTE SÍ FUNCIONA
+                messages: [
+                    { role: "user", content: mensaje }
+                ]
             },
             {
-                role: "user",
-                content: mensaje
+                headers: {
+                    Authorization: `Bearer ${process.env.HF_TOKEN}`,
+                    "Content-Type": "application/json"
+                }
             }
-        ],
-        max_tokens: 200,
-        temperature: 0.3
-    },
-    {
-        headers: {
-            Authorization: `Bearer ${process.env.HF_TOKEN}`,
-            "Content-Type": "application/json"
-        }
-    }
-);
+        );
 
-        const respuestaIA = response.data.choices[0].message.content;
+        const respuesta = response.data.choices[0].message.content;
 
-        res.json({ respuesta: respuestaIA });
+        res.json({ respuesta });
 
     } catch (error) {
-        console.error("🔥 ERROR IA COMPLETO:");
-        console.error(error.response?.data || error.message);
-
+        console.error("ERROR IA:", error.response?.data || error.message);
         res.json({ respuesta: "Error IA" });
     }
 });
