@@ -18,12 +18,13 @@ router.post("/comprar", async (req, res) => {
     try {
 
         const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        });
+    host: "live.smtp.mailtrap.io",
+    port: 587,
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
+    }
+});
 
         // 🔥 prueba conexión
         await transporter.verify();
